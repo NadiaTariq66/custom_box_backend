@@ -1,7 +1,7 @@
 {
   "development": {
     "mongodb": {
-      "uri": "mongodb+srv://zubairjaved254:Vs5IISgJoJx4vGMG@cluster0.w1zgimp.mongodb.net/custom-backend",
+      "uri": "mongodb+srv://zubairjaved254:Vs5IISgJoJx4vGMG@cluster0.w1zgimp.mongodb.net/custom-backend?retryWrites=true&w=majority",
       "options": {
         "useNewUrlParser": true,
         "useUnifiedTopology": true
