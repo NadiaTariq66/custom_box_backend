@@ -1,0 +1,11 @@
+{
+  "development": {
+    "mongodb": {
+      "uri": "mongodb+srv://zubairjaved254:Vs5IISgJoJx4vGMG@cluster0.w1zgimp.mongodb.net/custom-backend",
+      "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true
+      }
+    }
+  }
+} 
