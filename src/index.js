@@ -3,6 +3,11 @@ const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./db/connection');
 const adminRoutes = require('./routes/adminRoutes');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+
+
+
 
 const app = express();
 
@@ -16,6 +21,8 @@ connectDB();
 
 // Routes
 app.use('/api/admin', adminRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories',categoryRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Custom Backend API' });

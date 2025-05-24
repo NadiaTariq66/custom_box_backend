@@ -1,19 +1,17 @@
 const Joi = require('joi');
 
 const createProductDto = Joi.object({
-  name: Joi.string().required().min(3).max(100),
-  description: Joi.string().required().min(10),
-  price: Joi.number().required().min(0),
-  category: Joi.string().required().valid('Electronics', 'Clothing', 'Books', 'Other'),
-  stock: Joi.number().min(0).default(0)
+  productName: Joi.string().required().min(3).max(100),
+  productContent: Joi.string().required(),
+  productSpecification: Joi.string().required(),
+  productImage: Joi.string().required()
 });
 
 const updateProductDto = Joi.object({
-  name: Joi.string().min(3).max(100),
-  description: Joi.string().min(10),
-  price: Joi.number().min(0),
-  category: Joi.string().valid('Electronics', 'Clothing', 'Books', 'Other'),
-  stock: Joi.number().min(0)
+  productName: Joi.string().min(3).max(100),
+  productContent: Joi.string(),
+  productSpecification: Joi.string(),
+  productImage: Joi.string()
 });
 
 module.exports = {

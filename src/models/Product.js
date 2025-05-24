@@ -1,31 +1,27 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  name: {
+  productName: {
     type: String,
     required: true,
     trim: true
   },
-  description: {
+  productContent: {
     type: String,
     required: true
   },
-  price: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  category: {
+  productSpecification: {
     type: String,
-    required: true,
-    enum: ['Electronics', 'Clothing', 'Books', 'Other']
+    required: true
   },
-  stock: {
-    type: Number,
-    required: true,
-    min: 0,
-    default: 0
+  productImage: {
+    type: String,
+    required: true
   },
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  }],
   createdAt: {
     type: Date,
     default: Date.now
