@@ -13,4 +13,25 @@ exports.createQuote = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+exports.getAllQuotes = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const total = await Quote.countDocuments();
+    const quotes = await Quote.find().skip(skip).limit(limit);
+    const totalPages = Math.ceil(total / limit);
+    res.json({
+      count: total,
+      quotes,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 }; 

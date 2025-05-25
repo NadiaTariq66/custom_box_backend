@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { createQuote } = require('../controllers/quoteController');
+const { createQuote, getAllQuotes } = require('../controllers/quoteController');
 
-router.post('/quotes', createQuote);
+router.post('/createQuotes', createQuote);
+router.get('/customerList', getAllQuotes);
 
 module.exports = router; 
