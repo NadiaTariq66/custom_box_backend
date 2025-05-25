@@ -35,7 +35,7 @@ exports.createProduct = async (req, res) => {
 // Get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate("categories");
     const productsWithCategoryCount = products.map(product => ({
       ...product.toObject(),
       categoryCount: product.categories ? product.categories.length : 0
@@ -49,7 +49,7 @@ exports.getAllProducts = async (req, res) => {
 // Get product by ID (using query param)
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.query.id).populate('relatedProducts', 'productName productImages');
+    const product = await Product.findById(req.query.id).populate('productName categories productContent productSpecification productImage' );
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
