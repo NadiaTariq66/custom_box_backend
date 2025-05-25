@@ -35,7 +35,12 @@ exports.createProduct = async (req, res) => {
 // Get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("categories");
+    const search = req.query.search;
+    let query = {};
+    if (search) {
+      query.productName = { $regex: search, $options: 'i' }; // case-insensitive search
+    }
+    const products = await Product.find(query).populate("categories");
     const productsWithCategoryCount = products.map(product => ({
       ...product.toObject(),
       categoryCount: product.categories ? product.categories.length : 0
