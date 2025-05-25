@@ -5,6 +5,7 @@ const connectDB = require('./db/connection');
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const quoteRoutes = require('./routes/quoteRoutes');
 
 
 
@@ -23,6 +24,7 @@ connectDB();
 app.use('/api/admin', adminRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories',categoryRoutes);
+app.use('/api', quoteRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Custom Backend API' });
