@@ -36,16 +36,31 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const search = req.query.search;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
     let query = {};
     if (search) {
       query.productName = { $regex: search, $options: 'i' }; // case-insensitive search
     }
-    const products = await Product.find(query).populate("categories");
+    const total = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .populate("categories")
+      .skip(skip)
+      .limit(limit);
     const productsWithCategoryCount = products.map(product => ({
       ...product.toObject(),
       categoryCount: product.categories ? product.categories.length : 0
     }));
-    res.json(productsWithCategoryCount);
+    const totalPages = Math.ceil(total / limit);
+    res.json({
+      totalCount: total,
+      products: productsWithCategoryCount,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -129,6 +144,27 @@ exports.createCategory = async (req, res) => {
     }
 
     res.status(201).json({ message: 'Category created', category });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getAllCategories = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const total = await Category.countDocuments();
+    const categories = await Category.find().skip(skip).limit(limit);
+    const totalPages = Math.ceil(total / limit);
+    res.json({
+      totalCount: total,
+      categories,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
