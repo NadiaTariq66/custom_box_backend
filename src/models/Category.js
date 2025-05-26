@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-  productName: {
+ categoryName: {
     type: String,
     required: true,
     trim: true
   },
-  productContent: {
+  categoryContent: {
     type: String,
     required: true
   },
-  productImages: [{
+  categoryImages: [{
     type: String,
     required: true
   }],
@@ -23,9 +23,9 @@ const categorySchema = new mongoose.Schema({
   customSlug: {
     type: String
   },
-  metaKeywords: {
+  metaKeywords: [{
     type: String
-  },
+  }],
   faqs: [{
     question: { type: String, required: true },
     answer: { type: String, required: true }
