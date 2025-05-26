@@ -8,6 +8,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const quoteRoutes = require('./routes/quoteRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const styleRoutes = require('./routes/styleRoutes');
+const genRoutes=require('./routes/genRoutes');
 
 
 
@@ -29,6 +30,7 @@ app.use('/api/categories',categoryRoutes);
 app.use('/api/quote', quoteRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/style', styleRoutes);
+app.use('/api/gen', genRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Custom Backend API' });
