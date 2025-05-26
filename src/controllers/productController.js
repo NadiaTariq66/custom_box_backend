@@ -150,13 +150,21 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.getAllCategories = async (req, res) => {
-  try {
+ try {
+    const search = req.query.search;
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
-    const total = await Category.countDocuments();
-    const categories = await Category.find().skip(skip).limit(limit);
+
+    let query = {};
+    if (search) {
+      query.categoryName = { $regex: search, $options: 'i' }; // case-insensitive search
+    }
+
+    const total = await Category.countDocuments(query);
+    const categories = await Category.find(query).skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
+
     res.json({
       totalCount: total,
       categories,
