@@ -67,13 +67,52 @@ exports.getAllProducts = async (req, res) => {
 };
 
 // Get product by ID (using query param)
-exports.getProductById = async (req, res) => {
+exports.getProductCategories = async (req, res) => {
   try {
-    const product = await Product.findById(req.query.id).populate('productName categories productContent productSpecification productImage' );
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+
+    // First get the product
+    const product = await Product.findById(req.query.id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.json(product);
+
+    // Build category query
+    let categoryQuery = { _id: { $in: product.categories } };
+    if (search) {
+      categoryQuery.categoryName = { $regex: search, $options: 'i' };
+    }
+
+    // Get total count of categories
+    const totalCategories = await Category.countDocuments(categoryQuery);
+
+    // Get paginated categories
+    const categories = await Category.find(categoryQuery)
+      .skip(skip)
+      .limit(limit);
+
+    // Calculate pagination info
+    const totalPages = Math.ceil(totalCategories / limit);
+
+    // Prepare response
+    const response = {
+      product: {
+        ...product.toObject(),
+        categories: categories,
+      },
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalCategories,
+        previousPage: page > 1 ? page - 1 : null,
+        nextPage: page < totalPages ? page + 1 : null
+      }
+    };
+
+    res.json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

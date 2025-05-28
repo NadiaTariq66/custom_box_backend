@@ -15,6 +15,7 @@ const createCategoryDto = Joi.object({
     })
   ),
   relatedProducts: Joi.array().items(Joi.string().hex().length(24)),
+  productId:Joi.string()
 });
 
 const updateCategoryDto = Joi.object({
