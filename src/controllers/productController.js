@@ -134,16 +134,28 @@ exports.createCategory = async (req, res) => {
     const category = new Category(req.body);
     await category.save();
 
-    // If productId is provided, push category id to product's categories array
+    let productId = null;
+
+    // Push category to product's categories array if productId is provided
     if (req.query.productId) {
-      await Product.findByIdAndUpdate(
+      const updatedProduct = await Product.findByIdAndUpdate(
         req.query.productId,
         { $push: { categories: category._id } },
         { new: true }
       );
+      productId = updatedProduct?._id || null;
     }
 
-    res.status(201).json({ message: 'Category created', category });
+    // Clone category and inject productId
+    const categoryWithProductId = {
+      ...category.toObject(),
+      productId: productId
+    };
+
+    res.status(201).json({
+      message: 'Category created',
+      category: categoryWithProductId
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
