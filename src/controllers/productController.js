@@ -189,5 +189,51 @@ exports.getAllCategories = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+// Update product (using query param)
+exports.updateCategory = async (req, res) => {
+  try {
+    // Validate request body
+    const { error } = updateCategoryDto.validate(req.body);
+    if (error) {
+      return res.status(400).json({ 
+        message: 'Validation error', 
+        details: error.details.map(detail => detail.message) 
+      });
+    }
+
+    const product = await Category.findByIdAndUpdate(
+      req.query.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    res.json({
+      message: 'Category updated successfully',
+      product
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Duplicate value error' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete product (using query param)
+exports.deleteCategory = async (req, res) => {
+  try {
+    const product = await Category.findByIdAndDelete(req.query.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+    res.json({ message: 'Category deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Add update, get, delete as needed 
