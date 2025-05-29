@@ -20,8 +20,16 @@ exports.getAllBlogs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
-    const total = await Blog.countDocuments();
-    const blogs = await Blog.find().skip(skip).limit(limit);
+    const search = req.query.search || '';
+    let query = {};
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { category: { $regex: search, $options: 'i' } }
+      ];
+    }
+    const total = await Blog.countDocuments(query);
+    const blogs = await Blog.find(query).skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
     res.json({
       totalCount: total,

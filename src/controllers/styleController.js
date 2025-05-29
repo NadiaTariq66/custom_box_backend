@@ -20,8 +20,13 @@ exports.getAllStyles = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
-    const total = await Style.countDocuments();
-    const styles = await Style.find().skip(skip).limit(limit);
+    const search = req.query.search || '';
+    let query = {};
+    if (search) {
+      query.styleName = { $regex: search, $options: 'i' };
+    }
+    const total = await Style.countDocuments(query);
+    const styles = await Style.find(query).skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
     res.json({
       totalCount: total,

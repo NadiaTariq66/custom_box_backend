@@ -15,13 +15,18 @@ exports.createQuote = async (req, res) => {
   }
 };
 
-exports.getAllQuotes = async (req, res) => {
+exports.customerList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
-    const total = await Quote.countDocuments();
-    const quotes = await Quote.find().skip(skip).limit(limit);
+    const search = req.query.search || '';
+    let query = {};
+    if (search) {
+      query.fullName = { $regex: search, $options: 'i' };
+    }
+    const total = await Quote.countDocuments(query);
+    const quotes = await Quote.find(query).skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
     res.json({
       count: total,
