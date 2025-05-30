@@ -9,7 +9,7 @@ const quoteRoutes = require('../src/routes/quoteRoutes');
 const blogRoutes = require('../src/routes/blogRoutes');
 const styleRoutes = require('../src/routes/styleRoutes');
 const genRoutes=require('../src/routes/genRoutes');
-const testimonialRoutes = require('./routes/testimonialRoutes');
+const testimonialRoutes = require('../src/routes/testimonialRoutes');
 
 
 
