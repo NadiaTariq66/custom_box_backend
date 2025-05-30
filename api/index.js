@@ -9,6 +9,7 @@ const quoteRoutes = require('../src/routes/quoteRoutes');
 const blogRoutes = require('../src/routes/blogRoutes');
 const styleRoutes = require('../src/routes/styleRoutes');
 const genRoutes=require('../src/routes/genRoutes');
+const testimonialRoutes = require('./routes/testimonialRoutes');
 
 
 
@@ -30,6 +31,7 @@ app.use('/api/categories',categoryRoutes);
 app.use('/api/quote', quoteRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/style', styleRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/gen', genRoutes);
 
 app.get('/', (req, res) => {
