@@ -275,4 +275,52 @@ exports.deleteCategory = async (req, res) => {
   }
 };
 
+exports.getRelatedCategories = async (req, res) => {
+  try {
+    const categoryId = req.query.categoryId;
+    const search = req.query.search || '';
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    if (!categoryId) {
+      return res.status(400).json({ message: 'Category ID is required' });
+    }
+
+    // First get the main category with its relatedCategories
+    const mainCategory = await Category.findById(categoryId);
+    if (!mainCategory) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    // Build the query for related categories
+    let query = {
+      _id: { $in: mainCategory.relatedCategories || [] }, // Only get categories that are in relatedCategories array
+      categoryName: { $regex: search, $options: 'i' } // Case-insensitive search
+    };
+
+    // Get total count and related categories
+    const [total, relatedCategories] = await Promise.all([
+      Category.countDocuments(query),
+      Category.find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    res.json({
+      totalCount: total,
+      relatedCategories,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Add update, get, delete as needed 

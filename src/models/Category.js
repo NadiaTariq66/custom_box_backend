@@ -34,9 +34,9 @@ const categorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product'
   },
-  relatedProducts: [{
+  relatedCategories: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
+    ref: 'Category'
   }],
   createdAt: {
     type: Date,
