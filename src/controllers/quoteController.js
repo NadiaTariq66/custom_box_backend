@@ -14,24 +14,27 @@ exports.createQuote = async (req, res) => {
     // Check if category exists
     const categoryId = req.query.categoryId;
     const category = await Category.findById(categoryId);
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
+
 
     // Create quote
     const quote = new Quote({ ...req.body, categoryId });
     await quote.save();
 
-    // Push quote ID to category's quotes array
-    await Category.findByIdAndUpdate(
-      categoryId,
-      { $push: { quotes: quote._id } },
-      { new: true }
-    );
+    // Push quote ID to category's quotes array if categoryId is present
+    if (categoryId) {
+      await Category.findByIdAndUpdate(
+        categoryId,
+        { $push: { quotes: quote._id } },
+        { new: true }
+      );
+    }
+
+    // Populate categoryId in the response
+    const populatedQuote = await Quote.findById(quote._id).populate('categoryId');
 
     res.status(201).json({ 
       message: 'Quote request submitted successfully', 
-      quote
+      quote: populatedQuote
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
