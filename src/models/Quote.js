@@ -15,6 +15,10 @@ const quoteSchema = new mongoose.Schema({
   finishing: [{ type: String }],
   additionalInfo: { type: String },
   uploadFile: { type: String },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

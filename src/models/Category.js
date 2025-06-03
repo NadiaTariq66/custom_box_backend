@@ -38,6 +38,10 @@ const categorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category'
   }],
+  quotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Quote'
+  }],
   createdAt: {
     type: Date,
     default: Date.now

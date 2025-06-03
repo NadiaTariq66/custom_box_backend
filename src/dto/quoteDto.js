@@ -15,6 +15,7 @@ const createQuoteDto = Joi.object({
   finishing: Joi.array().items(Joi.string()),
   additionalInfo: Joi.string().allow(''),
   uploadFile: Joi.string().allow(''),
+  categoryId: Joi.string().hex().length(24)
 });
 
 module.exports = { createQuoteDto }; 

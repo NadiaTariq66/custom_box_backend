@@ -15,7 +15,8 @@ const createCategoryDto = Joi.object({
     })
   ),
   relatedCategories: Joi.array().items(Joi.string().hex().length(24)),
-  productId:Joi.string()
+  quotes: Joi.array().items(Joi.string().hex().length(24)),
+  productId: Joi.string()
 });
 
 const updateCategoryDto = Joi.object({
@@ -33,6 +34,7 @@ const updateCategoryDto = Joi.object({
     })
   ),
   relatedCategories: Joi.array().items(Joi.string().hex().length(24)),
+  quotes: Joi.array().items(Joi.string().hex().length(24))
 });
 
 module.exports = {
