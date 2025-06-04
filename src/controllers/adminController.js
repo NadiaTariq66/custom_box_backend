@@ -9,6 +9,7 @@ exports.createAdmin = async (req, res) => {
 
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({ email });
+    console.log(existingAdmin)
     if (existingAdmin) {
       return res.status(400).json({ message: 'Admin already exists with this email' });
     }
