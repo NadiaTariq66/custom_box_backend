@@ -5,5 +5,6 @@ const upload = require('../middleware/upload');
 const genController = require('../controllers/genController');
 
 router.post('/upload', upload.array('files', 10), genController.uploadFiles);
+router.get('/genericSearch', genController.genericSearch);
 
 module.exports = router;
