@@ -170,35 +170,32 @@ exports.createCategory = async (req, res) => {
     const { error } = createCategoryDto.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
 
-    const category = new Category(req.body);
-    await category.save();
-
-    let productId = null;
-
-    // Push category to product's categories array if productId is provided
+    // Include productId from query into request body (if present)
+    const categoryData = { ...req.body };
     if (req.query.productId) {
-      const updatedProduct = await Product.findByIdAndUpdate(
-        req.query.productId,
-        { $push: { categories: category._id } },
-        { new: true }
-      );
-      productId = updatedProduct?._id || null;
+      categoryData.productId = req.query.productId;
     }
 
-    // Clone category and inject productId
-    const categoryWithProductId = {
-      ...category.toObject(),
-      productId: productId
-    };
+    const category = new Category(categoryData);
+    await category.save();
+
+    // Push category to Product
+    if (req.query.productId) {
+      await Product.findByIdAndUpdate(
+        req.query.productId,
+        { $push: { categories: category._id } }
+      );
+    }
 
     res.status(201).json({
       message: 'Category created',
-      category: categoryWithProductId
+      category
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.getAllCategories = async (req, res) => {
  try {
