@@ -5,6 +5,7 @@ const blogCategorySchema = new mongoose.Schema({
   metaTitle: { type: String },
   metaDescription: { type: String },
   metaKeywords: [{ type: String }],
+  blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }],
   createdAt: { type: Date, default: Date.now }
 });
 

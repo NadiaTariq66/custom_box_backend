@@ -1,13 +1,29 @@
 const Blog = require('../models/Blog');
 const { createBlogDto, updateBlogDto } = require('../dto/blogDto');
+const BlogCategory = require('../models/blogCategory');
 
 // Create Blog
 exports.createBlog = async (req, res) => {
   try {
     const { error } = createBlogDto.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
-    const blog = new Blog(req.body);
+
+    // Check if category exists
+    const blogCategoryId = req.query.blogCategoryId;
+    const blogCategory = await BlogCategory.findById(blogCategoryId);
+    if (!blogCategory) return res.status(404).json({ message: 'Blog category not found' });
+
+    // Create blog with category reference
+    const blog = new Blog({ ...req.body, blogCategoryId: blogCategoryId });
     await blog.save();
+
+    // Push blog id to blogCategory's blogs array
+    await BlogCategory.findByIdAndUpdate(
+      blogCategoryId,
+      { $push: { blogs: blog._id } },
+      { new: true }
+    );
+
     res.status(201).json({ message: 'Blog created successfully', blog });
   } catch (err) {
     res.status(500).json({ message: err.message });

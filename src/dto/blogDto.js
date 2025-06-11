@@ -11,6 +11,7 @@ const createBlogDto = Joi.object({
   publishDate: Joi.date().allow(''),
   tags: Joi.array().items(Joi.string()),
   category: Joi.string().allow(''),
+  blogCategoryId:Joi.string().hex().length(24),
   status: Joi.string().valid('draft', 'published').default('draft'),
 });
 
@@ -25,6 +26,7 @@ const updateBlogDto = Joi.object({
   publishDate: Joi.date().allow(''),
   tags: Joi.array().items(Joi.string()),
   category: Joi.string().allow(''),
+  blogCategoryId:Joi.string().hex().length(24),
   status: Joi.string().valid('draft', 'published'),
 });
 

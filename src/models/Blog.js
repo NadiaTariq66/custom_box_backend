@@ -9,6 +9,7 @@ const blogSchema = new mongoose.Schema({
   authorName: { type: String },
   publishDate: { type: Date },
   tags: [{ type: String }],
+  blogCategoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'BlogCategory' }, // <-- update here
   category: { type: String },
   description: {type: String},
   status: { type: String, enum: ['draft', 'published'], default: 'draft' },
