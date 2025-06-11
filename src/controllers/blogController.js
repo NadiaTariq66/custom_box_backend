@@ -63,7 +63,7 @@ exports.getAllBlogs = async (req, res) => {
 // Get Blog by ID
 exports.getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.query.id);
+    const blog = await Blog.findById(req.query.id).populate("blogCategoryId");
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json(blog);
   } catch (err) {
