@@ -44,7 +44,7 @@ exports.getBlogCategory = async (req, res) => {
 
 exports.getAllBlogCategories = async (req, res) => {
   try {
-    const blogCategories = await BlogCategory.find();
+    const blogCategories = await BlogCategory.find().populate('blogs');
     res.json(blogCategories);
   } catch (err) {
     res.status(500).json({ message: err.message });
