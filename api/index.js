@@ -10,7 +10,7 @@ const blogRoutes = require('../src/routes/blogRoutes');
 const styleRoutes = require('../src/routes/styleRoutes');
 const genRoutes=require('../src/routes/genRoutes');
 const testimonialRoutes = require('../src/routes/testimonialRoutes');
-
+const blogCategoryRoutes = require('../src/routes/blogCategoryRoutes');
 
 
 
@@ -33,6 +33,7 @@ app.use('/api/blog', blogRoutes);
 app.use('/api/style', styleRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/gen', genRoutes);
+app.use('/api/blogCategory', blogCategoryRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Custom Box' });
