@@ -78,7 +78,31 @@ exports.updateBlog = async (req, res) => {
     if (error) return res.status(400).json({ message: error.details[0].message });
     const blog = await Blog.findByIdAndUpdate(req.query.id, req.body, { new: true });
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
-    res.json({ message: 'Blog updated successfully', blog });
+    const newCategoryId = req.query.blogCategoryId;
+
+    // If category is being changed
+    if (newCategoryId && newCategoryId !== String(blog.blogCategoryId)) {
+      const newCategory = await BlogCategory.findById(newCategoryId);
+      if (!newCategory) return res.status(404).json({ message: 'New blog category not found' });
+
+      // Remove blog from old category
+      await BlogCategory.findByIdAndUpdate(blog.blogCategoryId, {
+        $pull: { blogs: blog._id }
+      });
+
+      // Add blog to new category
+      await BlogCategory.findByIdAndUpdate(newCategoryId, {
+        $push: { blogs: blog._id }
+      });
+
+      blog.blogCategoryId = newCategoryId;
+    }
+
+    // Update other blog fields
+    Object.assign(blog, req.body);
+    await blog.save();
+
+    res.status(200).json({ message: 'Blog updated successfully', blog });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
