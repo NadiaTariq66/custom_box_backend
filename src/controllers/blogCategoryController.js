@@ -73,7 +73,7 @@ exports.getAllBlogCategories = async (req, res) => {
 
 exports.deleteBlogCategory = async (req, res) => {
   try {
-    const blogCategory = await BlogCategory.findByIdAndDelete(req.query.id);
+    const blogCategory = await BlogCategory.findByIdAndDelete(req.query.id).populate('blogs');
     if (!blogCategory) return res.status(404).json({ message: 'Blog category not found' });
     res.json({ message: 'Blog category deleted' });
   } catch (err) {
