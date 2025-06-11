@@ -45,7 +45,7 @@ exports.getAllBlogs = async (req, res) => {
       ];
     }
     const total = await Blog.countDocuments(query);
-    const blogs = await Blog.find(query).skip(skip).limit(limit);
+    const blogs = await Blog.find(query).populate("blogCategoryId").skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
     res.json({
       totalCount: total,
