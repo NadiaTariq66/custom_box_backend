@@ -44,8 +44,28 @@ exports.getBlogCategory = async (req, res) => {
 
 exports.getAllBlogCategories = async (req, res) => {
   try {
-    const blogCategories = await BlogCategory.find().populate('blogs');
-    res.json(blogCategories);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+    let query = {};
+    if (search) {
+      query.categoryName = { $regex: search, $options: 'i' };
+    }
+    const total = await BlogCategory.countDocuments(query);
+    const blogCategories = await BlogCategory.find(query)
+      .populate('blogs')
+      .skip(skip)
+      .limit(limit);
+    const totalPages = Math.ceil(total / limit);
+    res.json({
+      totalCount: total,
+      blogCategories,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
