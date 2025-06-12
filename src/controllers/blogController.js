@@ -30,36 +30,6 @@ exports.createBlog = async (req, res) => {
   }
 };
 
-// Get All Blogs (paginated)
-exports.getAllBlogs = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
-    const skip = (page - 1) * limit;
-    const search = req.query.search || '';
-    let query = {};
-    if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { category: { $regex: search, $options: 'i' } }
-      ];
-    }
-    const total = await Blog.countDocuments(query);
-    const blogs = await Blog.find(query).populate("blogCategoryId").skip(skip).limit(limit);
-    const totalPages = Math.ceil(total / limit);
-    res.json({
-      totalCount: total,
-      blogs,
-      currentPage: page,
-      totalPages,
-      previousPage: page > 1 ? page - 1 : null,
-      nextPage: page < totalPages ? page + 1 : null
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
 // Get Blog by ID
 exports.getBlogById = async (req, res) => {
   try {
@@ -114,6 +84,46 @@ exports.deleteBlog = async (req, res) => {
     const blog = await Blog.findByIdAndDelete(req.query.id);
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json({ message: 'Blog deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get All Blogs (paginated)
+exports.getAllBlogs = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+    const blogCategoryId = req.query.blogCategoryId;
+    
+    let query = {};
+    
+    // Add blogCategoryId to query if provided
+    if (blogCategoryId) {
+      query.blogCategoryId = blogCategoryId;
+    }
+    
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { category: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    const total = await Blog.countDocuments(query);
+    const blogs = await Blog.find(query).populate("blogCategoryId").skip(skip).limit(limit);
+    const totalPages = Math.ceil(total / limit);
+    
+    res.json({
+      totalCount: total,
+      blogs,
+      currentPage: page,
+      totalPages,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
