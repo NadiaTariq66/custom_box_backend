@@ -1,6 +1,6 @@
 const BlogCategory = require('../models/blogCategory');
 const { createBlogCategoryDto, updateBlogCategoryDto } = require('../dto/blogCategoryDto');
-
+const sendNewsletterToAll = require('../utils/sendNewsletter');
 exports.addBlogCategory = async (req, res) => {
   try {
     const { error } = createBlogCategoryDto.validate(req.body);
@@ -8,6 +8,10 @@ exports.addBlogCategory = async (req, res) => {
 
     const blogCategory = new BlogCategory(req.body);
     await blogCategory.save();
+    await sendNewsletterToAll(
+      'Blog Category Updated',
+      `A new blog category has been added: ${req.body.categoryName}`
+    );
     res.status(201).json({ message: 'Blog category created', blogCategory });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -26,6 +30,10 @@ exports.updateBlogCategory = async (req, res) => {
     );
     if (!blogCategory) return res.status(404).json({ message: 'Blog category not found' });
 
+    await sendNewsletterToAll(
+      'Blog Category Updated',
+      `A new blog category has been updated: ${req.body.categoryName}`
+    );
     res.json({ message: 'Blog category updated', blogCategory });
   } catch (err) {
     res.status(500).json({ message: err.message });
