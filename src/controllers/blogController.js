@@ -26,7 +26,7 @@ exports.createBlog = async (req, res) => {
 
     await sendNewsletterToAll(
       'New Blog Posted',
-      `A new blog has been added: ${blog.title}`
+      `A new blog has been added: ${blog.title}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
 
     res.status(201).json({ message: 'Blog created successfully', blog });
@@ -79,7 +79,7 @@ exports.updateBlog = async (req, res) => {
 
     await sendNewsletterToAll(
       'Blog Updated',
-      `A new blog has been updated: ${blog.title}`
+      `A new blog has been updated: ${blog.title}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
 
     res.status(200).json({ message: 'Blog updated successfully', blog });

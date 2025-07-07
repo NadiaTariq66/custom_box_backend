@@ -10,7 +10,7 @@ exports.addBlogCategory = async (req, res) => {
     await blogCategory.save();
     await sendNewsletterToAll(
       'New Blog Category Posted',
-      `A new blog category has been added: ${req.body.categoryName}`
+      `A new blog category has been added: ${req.body.categoryName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
     res.status(201).json({ message: 'Blog category created', blogCategory });
   } catch (err) {
@@ -32,7 +32,7 @@ exports.updateBlogCategory = async (req, res) => {
 
     await sendNewsletterToAll(
       'Blog Category Updated',
-      `A new blog category has been updated: ${req.body.categoryName}`
+      `A new blog category has been updated: ${req.body.categoryName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
     res.json({ message: 'Blog category updated', blogCategory });
   } catch (err) {

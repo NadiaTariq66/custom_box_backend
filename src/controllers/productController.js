@@ -22,7 +22,7 @@ exports.createProduct = async (req, res) => {
 
     await sendNewsletterToAll(
       'Product Added',
-      `A new product has been added: ${product.productName}`
+      `A new product has been added: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
 
     res.status(201).json({
@@ -147,7 +147,7 @@ exports.updateProduct = async (req, res) => {
 
     await sendNewsletterToAll(
       'Product Updated',
-      `A new product has been updated: ${product.productName}`
+      `A new product has been updated: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
     );
 
     res.json({
@@ -198,7 +198,7 @@ exports.createCategory = async (req, res) => {
     }
      await sendNewsletterToAll(
     'New Category Posted!',
-    `A new category titled "${category.categoryName}" has been posted. Check it out!`
+    `A new category titled "${category.categoryName}" has been posted.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
   );
 
     res.status(201).json({
@@ -262,7 +262,7 @@ exports.updateCategory = async (req, res) => {
     }
  await sendNewsletterToAll(
     'Category Updated!',
-    `A category titled "${product.categoryName}" has been updated. Check it out!`
+    `A category titled "${product.categoryName}" has been updated.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
   );
     res.json({
       message: 'Category updated successfully',
