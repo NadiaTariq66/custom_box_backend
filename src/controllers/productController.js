@@ -3,7 +3,7 @@ const { createProductDto, updateProductDto } = require('../dto/productDto');
 const Category = require('../models/Category');
 const { createCategoryDto, updateCategoryDto } = require('../dto/categoryDto');
 const mongoose = require('mongoose');
-
+const sendNewsletterToAll = require('../utils/sendNewsletter');
 // Create new product
 exports.createProduct = async (req, res) => {
   try {
@@ -19,6 +19,11 @@ exports.createProduct = async (req, res) => {
     // Create product
     const product = new Product(req.body);
     await product.save();
+
+    await sendNewsletterToAll(
+      'Product Updated',
+      `A new product has been added: ${product.productName}`
+    );
 
     res.status(201).json({
       message: 'Product created successfully',
@@ -140,6 +145,11 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    await sendNewsletterToAll(
+      'Product Updated',
+      `A new product has been updated: ${product.productName}`
+    );
+
     res.json({
       message: 'Product updated successfully',
       product
@@ -186,6 +196,10 @@ exports.createCategory = async (req, res) => {
         { $push: { categories: category._id } }
       );
     }
+     await sendNewsletterToAll(
+    'New Category Posted!',
+    `A new category titled "${category.categoryName}" has been posted. Check it out!`
+  );
 
     res.status(201).json({
       message: 'Category created',
@@ -246,7 +260,10 @@ exports.updateCategory = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Category not found' });
     }
-
+ await sendNewsletterToAll(
+    'Category Updated!',
+    `A category titled "${product.categoryName}" has been updated. Check it out!`
+  );
     res.json({
       message: 'Category updated successfully',
       product
