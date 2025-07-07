@@ -4,6 +4,8 @@ const Category = require('../models/Category');
 const Style = require('../models/Style');
 const Admin = require('../models/Admin');
 const Blog = require('../models/Blog');
+const Newsletter = require('../models/Newsletter');
+const nodemailer = require('nodemailer');
 
 exports.uploadFiles = (req, res) => {
     if (!req.files || req.files.length === 0) {
@@ -46,6 +48,47 @@ exports.genericSearch = async (req, res) => {
 
     // If nothing found
     return res.json({ products: [], categories: [] });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.subscribeNewsletter = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    // Save email to DB (ignore if already exists)
+    let newsletter = await Newsletter.findOne({ email });
+    if (!newsletter) {
+      newsletter = new Newsletter({ email });
+      await newsletter.save();
+    }
+
+    // Send confirmation email
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // apni env file me rakhein
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    let mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Newsletter Subscription',
+      text: 'Thank you for subscribing to our newsletter! You will now receive updates from us.'
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ message: 'Email sending failed', error: error.toString() });
+      } else {
+        res.status(201).json({ message: 'Subscribed successfully! Confirmation email sent.' });
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
