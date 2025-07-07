@@ -21,7 +21,7 @@ exports.createProduct = async (req, res) => {
     await product.save();
 
     await sendNewsletterToAll(
-      'Product Updated',
+      'Product Added',
       `A new product has been added: ${product.productName}`
     );
 

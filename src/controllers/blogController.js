@@ -25,7 +25,7 @@ exports.createBlog = async (req, res) => {
     );
 
     await sendNewsletterToAll(
-      'Blog Updated',
+      'New Blog Posted',
       `A new blog has been added: ${blog.title}`
     );
 

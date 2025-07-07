@@ -9,7 +9,7 @@ exports.addBlogCategory = async (req, res) => {
     const blogCategory = new BlogCategory(req.body);
     await blogCategory.save();
     await sendNewsletterToAll(
-      'Blog Category Updated',
+      'New Blog Category Posted',
       `A new blog category has been added: ${req.body.categoryName}`
     );
     res.status(201).json({ message: 'Blog category created', blogCategory });
