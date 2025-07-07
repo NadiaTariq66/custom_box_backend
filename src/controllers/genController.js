@@ -93,3 +93,27 @@ exports.subscribeNewsletter = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getNewsletterSubscribers = async (req, res) => {
+  try {
+    let { page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const total = await Newsletter.countDocuments();
+    const subscribers = await Newsletter.find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ _id: -1 });
+
+    res.json({
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      subscribers
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

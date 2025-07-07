@@ -7,5 +7,6 @@ const genController = require('../controllers/genController');
 router.post('/upload', upload.array('files', 10), genController.uploadFiles);
 router.get('/genericSearch', genController.genericSearch);
 router.post('/subscribeNewsletter', genController.subscribeNewsletter);
+router.get('/newsletter-subscribers', genController.getNewsletterSubscribers);
 
 module.exports = router;
