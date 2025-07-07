@@ -1,7 +1,7 @@
 const Blog = require('../models/Blog');
 const { createBlogDto, updateBlogDto } = require('../dto/blogDto');
 const BlogCategory = require('../models/blogCategory');
-
+const sendNewsletterToAll = require('../utils/sendNewsletter');
 // Create Blog
 exports.createBlog = async (req, res) => {
   try {
@@ -22,6 +22,11 @@ exports.createBlog = async (req, res) => {
       blogCategoryId,
       { $push: { blogs: blog._id } },
       { new: true }
+    );
+
+    await sendNewsletterToAll(
+      'Blog Updated',
+      `A new blog has been added: ${blog.title}`
     );
 
     res.status(201).json({ message: 'Blog created successfully', blog });
@@ -71,6 +76,11 @@ exports.updateBlog = async (req, res) => {
     // Update other blog fields
     Object.assign(blog, req.body);
     await blog.save();
+
+    await sendNewsletterToAll(
+      'Blog Updated',
+      `A new blog has been updated: ${blog.title}`
+    );
 
     res.status(200).json({ message: 'Blog updated successfully', blog });
   } catch (err) {
