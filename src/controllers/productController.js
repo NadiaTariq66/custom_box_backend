@@ -183,6 +183,11 @@ exports.createCategory = async (req, res) => {
     // Include productId from query into request body (if present)
     const categoryData = { ...req.body };
     if (req.query.productId) {
+      // Check if product exists
+      const product = await Product.findById(req.query.productId);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
       categoryData.productId = req.query.productId;
     }
 
