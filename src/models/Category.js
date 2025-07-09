@@ -42,6 +42,21 @@ const categorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Quote'
   }],
+  materialOptions: [{
+    image: { type: String, required: true },
+    name: { type: String, required: true },
+    description: { type: String }
+  }],
+  addOnOptions: [{
+    image: { type: String, required: true },
+    name: { type: String, required: true },
+    description: { type: String }
+  }],
+  finishingOptions: [{
+    image: { type: String, required: true },
+    name: { type: String, required: true },
+    description: { type: String }
+  }],
   createdAt: {
     type: Date,
     default: Date.now
