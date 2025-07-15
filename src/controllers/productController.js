@@ -20,10 +20,10 @@ exports.createProduct = async (req, res) => {
     const product = new Product(req.body);
     await product.save();
 
-    await sendNewsletterToAll(
-      'Product Added',
-      `A new product has been added: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
-    );
+    // await sendNewsletterToAll(
+    //   'Product Added',
+    //   `A new product has been added: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
+    // );
 
     res.status(201).json({
       message: 'Product created successfully',
@@ -145,10 +145,10 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    await sendNewsletterToAll(
-      'Product Updated',
-      `A new product has been updated: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
-    );
+    // await sendNewsletterToAll(
+    //   'Product Updated',
+    //   `A new product has been updated: ${product.productName}\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
+    // );
 
     res.json({
       message: 'Product updated successfully',
@@ -165,10 +165,20 @@ exports.updateProduct = async (req, res) => {
 // Delete product (using query param)
 exports.deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.query.id);
+    // Find the product first
+    const product = await Product.findById(req.query.id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+
+    // Delete all categories associated with this product
+    if (product.categories && product.categories.length > 0) {
+      await Category.deleteMany({ _id: { $in: product.categories } });
+    }
+
+    // Now delete the product
+    await Product.findByIdAndDelete(req.query.id);
+
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
