@@ -201,10 +201,10 @@ exports.createCategory = async (req, res) => {
         { $push: { categories: category._id } }
       );
     }
-     await sendNewsletterToAll(
-    'New Category Posted!',
-    `A new category titled "${category.categoryName}" has been posted.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
-  );
+  //    await sendNewsletterToAll(
+  //   'New Category Posted!',
+  //   `A new category titled "${category.categoryName}" has been posted.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
+  // );
 
     res.status(201).json({
       message: 'Category created',
