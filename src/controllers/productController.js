@@ -265,10 +265,10 @@ exports.updateCategory = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Category not found' });
     }
- await sendNewsletterToAll(
-    'Category Updated!',
-    `A category titled "${product.categoryName}" has been updated.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
-  );
+//  await sendNewsletterToAll(
+//     'Category Updated!',
+//     `A category titled "${product.categoryName}" has been updated.\n\nCheckout on our website: https://custom-boxes-chi.vercel.app/`
+//   );
     res.json({
       message: 'Category updated successfully',
       product
